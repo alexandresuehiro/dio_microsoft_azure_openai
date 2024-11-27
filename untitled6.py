@@ -14,47 +14,9 @@ from docx import Document
 import os
 import json
 
-subscription_key = "bd6a4c5f-c716-481d-a6f9-c008f146e894"
+subscription_key = "SUBSCRIPTION_KEY_HERE"
 endpoint = 'https://api.cognitive.microsofttranslator.com'
-#endpoint = 'https://dio-br-south.openai.azure.com'
-location = 'brazilsouth'
-target_language = 'pt-br'
-
-
-def translator_text(text, target_language):
-  path = '/translate'
-  constructed_url = endpoint + path
-
-  headers = {
-      'Ocp-Apim-Subscription-Key': subscription_key,
-      'Ocp-Apim-Subscription-Region': location,
-      'Content-type': 'application/json',
-      'X-ClientTraceId': str(os.urandom(16))
-  }
-
-  body = [{
-      'text': text
-  }]
-
-  params = {
-      'api-version': '3.0',
-      'from': 'en',
-      'to': target_language
-  }
-
-  request = requests.post(constructed_url, headers=headers, json=body, params=params)
-  response = request.json()
-
-  return response[0]["translations"][0]["text"]
-
-import requests
-from docx import Document
-import os
-
-subscription_key = "4YGfs3FbDgWFdxcPzkdUfjtdoy3WYaN4vE4XpgHyVx6Fi2JLij63JQQJ99AKACZoyfiXJ3w3AAAbACOGg3Tk"
-endpoint = 'https://api.cognitive.microsofttranslator.com'
-#endpoint = 'https://dio-br-south.openai.azure.com'
-location = 'brazilsouth'
+location = 'LOCATION_REGION_HERE'
 target_language = 'pt-br'
 path = '/translate'
 
