@@ -69,3 +69,50 @@ def translate_docx(input_file):
 
 input_file = "/content/Better Together.docx"
 translate_docx(input_file)
+
+
+def extract_text_from_url(url):
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        for script_or_style in soup(["script", "style"]):
+            script_or_style.decompose()
+        texto = soup.get_text(separator=' ')
+        #Limpar texto
+        lines = (line.strip() for line in texto.splitlines())
+        chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+        texto_limpo = '\n'.join(chunk for chunk in chunks if chunk)
+        return texto_limpo
+    else:
+        print(f"Erro ao acessar a URL: {url}")
+        return None
+
+    return response.text
+
+article = extract_text_from_url('https://www.letras.mus.br/jack-johnson/122710/')
+
+
+from langchain_openai.chat_models.azure import AzureChatOpenAI
+
+client = AzureChatOpenAI(
+    azure_endpoint = 'ANOTHER_END_POINT_HERE',
+    api_key="ANOTHER_KEY_HERE",
+    api_version='2024-02-15-preview', #trying to use an older version
+    deployment_name='gpt-4o-mini',
+    max_retries=0
+)
+
+def translate_article(text, lang):
+  messages = [
+      ("system", "Voce atua como tradutor de textos"),
+      ("user", f"Traduza o {text} para o idioma {lang} e responda em markdown")
+
+  ]
+  response = client.invoke(messages)
+  print(response.content)
+  return response.content
+
+
+translated = translate_article(article, "pt-br")
+print(translated)
